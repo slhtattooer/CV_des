@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Curriculum Regina Style</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- CSS INLINE -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #a6cece;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .sidebar {
+      width: 35%;
+      background: #f4f9f9;
+      padding: 2rem;
+      text-align: center;
+      border-right: 1px solid #e4dcdc;
+    }
+
+    .profile-pic {
+      width: 300px; /* dimensione avatar */
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto;
+      perspective: 1000px; /* necessaria per effetto 3D */
+    }
+
+    .flipper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .profile-pic:hover .flipper {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+
+    .front img, .back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .front {
+      border-radius: 50%;
+    }
+
+    .back {
+      transform: rotateY(180deg);
+      border-radius: 50%;
+    }
+
+
+
+
+    .name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+
+    .bio {
+      max-width: 90%;        /* larghezza contenuta */
+      margin: 0 auto;        /* centratura */
+      text-align: left;    /* testo centrato */
+      line-height: 1.4;      /* più spazio tra le righe */
+      padding: 10px 10px;    /* respiro interno */
+    }
+
+    .bio b {
+      color: #247475;        /* colore per i punti salienti */
+    }
+
+
+    .sidebar section {
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .sidebar h2 {
+      font-size: 1.3rem;
+      color: #247475;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      margin: 0.3rem 0;
+      color: #247475
+    }
+
+    .content {
+      width: 65%;
+      padding: 2rem;
+    }
+
+    .content h2 {
+      color: #247475;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+
+    .icons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      font-size: 0.95rem;
+    }
+
+    .icons-grid i {
+      margin-right: 0.5rem;
+      color: #247475;
+    }
+
+  .experience h3{
+      font-size: 1.15rem;
+      color: #247475;   /* più contrasto del #a6cece */
+      margin: 1rem 0 .5rem;
+    }
+
+    .experience ul {
+      margin: 0;
+      padding-left: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .contact-final ul{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1rem;      /* più leggibile */
+      line-height: 1.5;
+    }
+
+    .contact-final li{
+      margin-bottom: 8px;
+    }
+
+    .contact-final a{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: inherit;       /* usa il colore del testo corrente */
+      text-decoration: none;
+    }
+
+    .contact-final a:hover{
+       opacity: 0.7; /* leggera trasparenza */
+    }
+
+    .contact-final i{
+      color: #247475;       /* colore richiesto per le icone */
+      min-width: 18px;      /* evita “saltelli” di layout */
+    }
+
+
+    .sidebar-content-centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* centra tutto orizzontalmente */
+      text-align: center;  /* centra titoli e testo */
+    }
+
+    .icon-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* spazio ridotto tra icone */
+      margin-bottom: 10px;
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .software-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      display: inline-block; /* per centrare la lista */
+      text-align: left; /* icona + testo allineati tra loro */
+    }
+
+    .software-list li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .icon2 {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .icon,
+    .icon2 {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .icon:hover,
+    .icon2:hover {
+      opacity: 0.6;
+    }
+
+    .abilities .icon-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* sempre 2 colonne */
+      gap: 20px;
+    }
+
+    .abilities .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .abilities .icon {
+      width: 60px; /* grandezza icona */
+      height: auto;
+    }
+
+    .abilities .icon-item p {
+      margin-top: 8px;
+      font-size: 16px;
+      text-align: center;
+      color: #247475;
+    }
+    .job {
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .job-title {
+      padding: 8px 12px;
+      background: #f4f9f9;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .job-title:hover {
+      background: #e0f0f0;
+    }
+
+    .toggle-icon {
+      margin-right: 8px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #247475;
+    }
+
+    .job-desc {
+      padding: 8px 12px;
+      background: #fff;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .job-full{
+       display:none; margin-top:6px; 
+    }
+
+    /* --- RESPONSIVE --- */
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column; /* Sidebar sopra o sotto */
+    }
+    .sidebar, .content {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #e4dcdc;
+    }
+    .sidebar {
+      padding: 1.5rem;
+    }
+    .profile-pic {
+      width: 220px;
+      height: 220px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .profile-pic {
+      width: 180px;
+      height: 180px;
+    }
+    .name {
+      font-size: 1.3rem;
+    }
+    .bio {
+      font-size: 0.85rem;
+    }
+    .icon {
+      width: 70px;
+      height: 70px;
+    }
+    .icon2 {
+      width: 70px;
+      height: 70px;
+    }
+    .abilities .icon {
+      width: 60px;
+    }
+    .content {
+      padding: 1.2rem;
+    }
+    .job-title {
+      font-size: 0.95rem;
+    }
+    .contact-final ul {
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+    }
+    .icon {
+      width: 70px;
+      height: 70px;
+    }
+    .icon2 {
+      width: 35px;
+      height: 35px;
+    }
+    .abilities .icon {
+      width: 50px;
+    }
+    .content h2,
+    .sidebar h2 {
+      font-size: 1rem;
+    }
+  }
+
+
+
+
+
+  
+
+
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Colonna sinistra -->
+   <aside class="sidebar">
+      <div class="profile-pic flip-container">
+        <div class="flipper">
+          <div class="front">
+            <img src="foto1.PNG" alt="Avatar">
+          </div>
+          <div class="back">
+            <img src="foto2.PNG" alt="Foto reale">
+          </div>
+        </div>
+      </div>
+
+      <h1 class="name">Andrea Buda</h1>
+      <p class="bio">
+        Creativo classe 1987 con oltre <b>15 anni di esperienza</b> in <b>illustrazione</b> e <b>progettazione</b>, arricchita da una solida base <b>informatica</b> e da competenze in <b>sviluppo software</b>.  
+  Unisco <b>arte, codice e pensiero visivo</b> per realizzare <b>soluzioni digitali</b> funzionali e creative.  
+  Affidabile e collaborativo, lavoro con flessibilità per raggiungere obiettivi sia in <b>team</b> che in <b>autonomia</b>, con una forte propensione a <b>mettermi alla prova</b> e <b>imparare cose nuove</b>.
+      </p>
+
+      <!-- Contenitore centrato -->
+      <div class="sidebar-content-centered">
+
+        <section class="interests">
+          <h2>Interessi</h2>
+          <div class="icon-row">
+            <img src="icons/videogiochi.png" alt="Videogiochi" class="icon">
+            <img src="icons/cinema.png" alt="Cinema" class="icon">
+            <img src="icons/cane.png" alt="Cani" class="icon">
+          </div>
+          <div class="icon-row">
+            <img src="icons/musica.png" alt="Musica" class="icon">
+            <img src="icons/cucina.png" alt="Cucina" class="icon">
+            <img src="icons/montagna.png" alt="Montagna" class="icon">
+          </div>
+        </section>
+
+        <section class="software">
+          <h2>Software & Linguaggi</h2>
+          <ul class="software-list">
+            <li><img src="icons/figma.png" alt="Figma" class="icon2"> Figma</li>
+            <li><img src="icons/photoshop.png" alt="Photoshop" class="icon2"> Photoshop</li>
+            <li><img src="icons/procreate.png" alt="Procreate" class="icon2"> Procreate</li>
+            <li><img src="icons/html.png" alt="HTML" class="icon2"> HTML</li>
+            <li><img src="icons/css.png" alt="CSS" class="icon2"> CSS</li>
+            <li><img src="icons/JS.png" alt="JavaScript & jQuery" class="icon2"> JavaScript & jQuery</li>
+          </ul>
+        </section>
+
+        <section class="languages">
+          <h2>Lingue</h2>
+          <ul class="icon-row">
+            <li><img src="icons/italiano.png" alt="Italiano" class="icon"></li>
+            <li><img src="icons/inglese.png" alt="Inglese" class="icon"></li>
+          </ul>
+        </section>
+
+      </div>
+    </aside>
+
+
+    <!-- Colonna destra -->
+    <main class="content">
+      <section class="abilities">
+        <h2>Competenze</h2>
+
+        <div class="icon-row">
+          <div class="icon-item">
+            <img src="icons/char_design.png" alt="Character Design" class="icon">
+            <p>Character Design</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/Illustration.png" alt="Illustrazione" class="icon">
+            <p>Illustrazione</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/Logo.png" alt="Logo & Branding" class="icon">
+            <p>Logo & Branding</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/Digital_ill.png" alt="Grafica Digitale" class="icon">
+            <p>Grafica Digitale</p>
+          </div>
+        </div>
+
+        <div class="icon-row">
+          <div class="icon-item">
+            <img src="icons/print.png" alt="Grafica per la stampa" class="icon">
+            <p>Grafica per la stampa</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/UI.png" alt="UI Design" class="icon">
+            <p>UI Design</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/coding.png" alt="Sviluppo Software" class="icon">
+            <p>Sviluppo Software</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/social.png" alt="Gestione Social Media" class="icon">
+            <p>Gestione Social</p>
+          </div>
+        </div>
+      </section>
+
+     <section class="experience">
+        <h2>Esperienze</h2>
+
+        <h3>Educazione</h3>
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span> Scuola Internazionale di Comics
+          </div>
+          <div class="job-desc">
+            <span class="job-short">Specializzazione professionale in Illustrazione</span>
+            <span class="job-full"> Formazione completa di 600 ore su progettazione visiva e tecniche pittoriche tradizionali e digitali. Sviluppo di uno stile personale e realizzazione di progetti editoriali professionali.</span>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span> ITIS Giuseppe Peano
+          </div>
+          <div class="job-desc">
+            <span class="job-short">Diploma Per. ind.le capotecnico - Informatica</span>
+            <span class="job-full"> Formazione quinquennale tecnica in programmazione, reti, sistemi e basi di dati.</span>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span> Assocam scuola camerana
+          </div>
+          <div class="job-desc">
+            <span class="job-short">Tecnico sviluppo software</span>
+            <span class="job-full"> Corso pratico di 300 ore focalizzato sullo sviluppo di applicazioni, con l'utilizzo di linguaggi come Python, JavaScript, HTML e SQL. Studio di ambienti di sviluppo (IDE), gestione del versionamento con Git, basi di analisi tecnica e personalizzazione software secondo specifiche funzionali.</span>
+          </div>
+        </div>
+
+        <h3>Lavoro</h3>
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span> Inker's Club
+          </div>
+          <div class="job-desc">
+            <span class="job-short">Tatuatore con esperienza in branding personale</span>
+            <span class="job-full"> Specializzato in comunicazione digitale e gestione clienti, con progetti di personal branding e strategie visive.</span>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span> Temperino Marketing & Multimedia
+          </div>
+          <div class="job-desc">
+            <span class="job-short">Designer di contenuti digitali e illustrazione </span>
+            <span class="job-full"> Grafica per web e stampa, creazione campagne pubblicitarie, sviluppo concept creativi per brand nazionali.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact contact-final">
+        <h2>Contatti</h2>
+        <ul>
+          <li>
+            <a href="tel:+393476773106">
+              <i class="fa-solid fa-phone"></i> 347 677 3106
+            </a>
+          </li>
+          <li>
+            <a href="mailto:andrea@slhtattooer.it">
+              <i class="fa-solid fa-envelope"></i> andrea@slhtattooer.it
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/slhtattooer/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-instagram"></i> @slhtattooer
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/andrea-buda-4a7937315/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-linkedin"></i> Andrea Buda su LinkedIn
+            </a>
+          </li>
+         <li>
+            <a href="https://www.google.com/maps/search/?api=1&query=Caselle+Torinese+(TO)" target="_blank" rel="noopener">
+              <i class="fa-solid fa-location-dot"></i> Caselle Torinese (TO)
+            </a>
+          </li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".job-title").forEach(title => {
+    title.addEventListener("click", () => {
+      const jobFull = title.nextElementSibling.querySelector(".job-full");
+      const icon = title.querySelector(".toggle-icon");
+
+      if (jobFull.style.display === "block") {
+        jobFull.style.display = "none";
+        icon.textContent = "+";
+      } else {
+        jobFull.style.display = "block";
+        icon.textContent = "−";
+      }
+    });
+  });
+});
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

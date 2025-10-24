@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Curriculum Vitae Buda Andrea</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /*
+      ==========================
+      Base
+      --------------------------
+      Niente magie: reset semplice, palette in :root e tipografia sobria.
+      L'obiettivo è pulito e leggibile, senza fronzoli.
+      ==========================
+    */
+    * { box-sizing: border-box; }
+
+    :root{
+      --brand: #247475;
+      --bg: #a6cece;
+      --card: #fff;
+      --muted: #f4f9f9;
+      --line: #e4dcdc;
+      --sidebar-section-min: 240px; /* altezza coerente per le 3 sezioni della sidebar */
+      --icon-size: 60px;           /* dimensione icone sidebar */
+      --icon-gap: 20px;            /* gap default griglia icone */
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    /*
+      Sidebar
+      Tenuta pulita e centrata: ritratto, nome, bio e tre blocchi ordinati.
+      Border-right solo per separare visivamente le colonne.
+    */
+    .sidebar {
+      width: 35%;
+      background: var(--muted);
+      padding: 2rem;
+      text-align: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .profile-pic {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto;
+      perspective: 1000px;
+    }
+    .flipper { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s; }
+    .profile-pic:hover .flipper { transform: rotateY(180deg); }
+    .front, .back { position: absolute; inset: 0; backface-visibility: hidden; }
+    .front img, .back img { width: 100%; height: 100%; object-fit: cover; }
+    .front { border-radius: 50%; }
+    .back  { transform: rotateY(180deg); border-radius: 50%; }
+
+    .name { font-size: 1.5rem; font-weight: 600; margin: 0.5rem 0; }
+
+    .bio {
+      max-width: 90%;
+      margin: 0 auto 34px;
+      text-align: left;
+      line-height: 1.4;
+      padding: 10px 10px;
+    }
+    .bio b { color: var(--brand); }
+
+    .sidebar h2 {
+      font-size: 1.3rem;
+      color: var(--brand);
+      margin: 0 0 12px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /*
+      Contenitore delle tre sezioni a colonna unica
+      Grid semplice: un blocco sotto l'altro con respiro.
+    */
+    .sidebar-content-centered {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    /*
+      Ogni sezione ha la stessa struttura e un'altezza minima
+      per non "saltare" quando cambiano i contenuti.
+    */
+    .sidebar section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: var(--sidebar-section-min);
+      justify-content: flex-start;
+    }
+
+    .interests .icon-grid,
+    .software .icon-grid,
+    .languages .icon-row {
+      margin-bottom: 10px; /* stacchiamo un pelo e via */
+    }
+
+
+    /*
+      Griglia icone UNIFICATA (Interessi / Software & Linguaggi / Lingue)
+      Tutto coerente, facile da mantenere.
+    */
+    .icon-grid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* su desktop: 3 colonne pulite */
+      gap: var(--icon-gap);
+      justify-items: center;
+      align-items: center;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .icon-grid img{
+      width: var(--icon-size);
+      height: var(--icon-size);
+      object-fit: contain;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .icon-grid img:hover{ transform: scale(1.1); opacity: 0.8; }
+
+    /* piccole differenze di spaziatura per gusto personale */
+    .software .icon-grid{ gap: 16px 2px; }
+    .languages .icon-grid{ gap: 28px 1px; }
+    .interests .icon-grid{ gap: 16px 2px; }
+
+    /* Cursor per bandiere cliccabili */
+    .lang-switch{ cursor: pointer; }
+
+    /* Colonna destra: contenuti principali */
+    .content { width: 65%; padding: 2rem; }
+    .content h2 { color: var(--brand); margin-bottom: 1rem; text-transform: uppercase; }
+
+    /* Abilities: due righe di icone con label minimal */
+    .abilities .icon-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      transform: scale(1.05);
+    }
+    .abilities .icon-item {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .abilities .icon { width: 90px; height: auto; }
+    .abilities .icon-item p { margin-top: 8px; font-size: 14px; color: var(--brand); }
+    .icon, .icon2, .iconb { 
+        opacity: 1;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .icon:hover, .icon2:hover, .iconb:hover { 
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+
+    /* Experience / Jobs: fisarmonica light, no JS pesanti */
+    .experience h3{ font-size: 1.15rem; color: var(--brand); margin: 1rem 0 .5rem; }
+    .job { margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
+    .job-title {
+      padding: 8px 12px; background: var(--muted); cursor: pointer;
+      font-weight: bold; transition: background 0.3s ease; display: flex; align-items: center;
+    }
+    .job-title:hover { background: #e0f0f0; }
+    .toggle-icon { margin-right: 8px; font-weight: bold; font-size: 1.1rem; color: var(--brand); }
+    .job-desc { padding: 8px 12px; background: #fff; font-size: 0.95rem; line-height: 1.4; }
+    .job-full{ display:none; margin-top:6px; }
+
+    /* Contatti: lista pulita, icone Font Awesome a supporto */
+    .contact-final ul{ list-style: none; padding: 0; margin: 0; font-size: 1rem; line-height: 1.5; }
+    .contact-final li{ margin-bottom: 8px; }
+    .contact-final a{ display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
+    .contact-final a:hover{ opacity: 0.7; }
+    .contact-final i{ color: var(--brand); min-width: 18px; }
+
+    /* Responsive: due breakpoint concreti, niente over-engineering */
+
+    @media (min-width: 901px) {
+      .languages-row {
+        display: flex;
+        justify-content: center;
+        gap: 80px; /* spazio comodo per le bandiere */
+      }
+
+      .languages-row .iconb {
+        width: 80px; /* bandiere più grandi su desktop */
+        height: 80px;
+      }
+      .languages-row {
+        list-style: none; /* via i puntini */
+        padding: 0;
+        margin: 0;
+      }
+      
+    }
+
+
+    @media (max-width: 900px) {
+      .container { flex-direction: column; }
+      .sidebar, .content { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+      .sidebar { padding: 1.5rem; }
+      .profile-pic { width: 220px; height: 220px; }
+      :root { --sidebar-section-min: 220px; }
+    }
+
+@media (max-width: 600px) {
+  .sidebar-content-centered {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Interessi: 2 colonne per non schiacciare le icone */
+  .interests .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Software & Linguaggi: 2 colonne × 3 righe, ritmo regolare */
+ .software .icon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Uniformiamo le dimensioni delle icone software in mobile */
+.software .icon-grid img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+  /* Lingue: centrato, niente puntini e dimensione maggiore */
+  .languages .icon-row {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .languages .iconb {
+    width: 90px; /* leggermente più grandi */
+    height: auto;
+  }
+
+  /* Evitiamo overflow ovunque */
+  .icon-grid img,
+  .languages .icon-row img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+}
+
+
+
+
+
+
+
+    @media (max-width: 400px) {
+      .profile-pic { width: 150px; height: 150px; }
+      .abilities .icon { width: 50px; }
+      .content h2, .sidebar h2 { font-size: 1rem; }
+    }
+
+    /*
+      Stampa
+      A4, margini zero e una scaletta dolce per farci stare tutto.
+    */
+    @media print {
+      body { margin: 0; padding: 0; background: #fff; }
+      @page { size: A4; margin: 0; }
+      html, body { width: 210mm; height: 297mm; }
+      .container {
+        transform: scale(0.75);
+        transform-origin: top left;
+        width: 133%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Colonna sinistra: foto, nome, bio e tre blocchi rapidi -->
+    <aside class="sidebar">
+      <div class="profile-pic flip-container">
+        <div class="flipper">
+          <div class="front"><img src="foto1.PNG" alt="Avatar"></div>
+          <div class="back"><img src="foto2.PNG" alt="Avatar"></div>
+        </div>
+      </div>
+
+      <h1 class="name">Andrea Buda</h1>
+
+      <p class="bio"
+         data-it="Creativo classe 1987 con oltre <b>15 anni di esperienza</b> in <b>illustrazione</b> e <b>progettazione</b>, arricchita da una solida base <b>informatica</b> e da competenze in <b>sviluppo software</b>.  Unisco <b>arte, codice e pensiero visivo</b> per realizzare <b>soluzioni digitali</b> funzionali e creative.  Affidabile e collaborativo, lavoro con flessibilità per raggiungere obiettivi sia in <b>team</b> che in <b>autonomia</b>, con una forte propensione a <b>mettermi alla prova</b> e <b>imparare cose nuove</b>."
+         data-en="Creative professional, born in 1987, with over <b>15 years of experience</b> in <b>illustration</b> and <b>design</b>, supported by a strong <b>IT background</b> and <b>software development</b> skills. I blend <b>art, code, and visual thinking</b> to create <b>digital solutions</b> that are both functional and innovative. Reliable and collaborative, I adapt easily to work both in <b>teams</b> and <b>independently</b>, driven by a passion for <b>continuos learning</b> and <b>self-improvement</b>.">
+      </p>
+
+      <div class="sidebar-content-centered">
+        <!-- Interessi: icone a griglia, immediate da leggere -->
+        <section class="interests">
+          <h2 data-it="Interessi" data-en="Interests">Interessi</h2>
+          <div class="icon-grid">
+            <img src="icons/videogiochi.png" alt="Videogiochi"  title="Videogiochi">
+            <img src="icons/cinema.png"      alt="Cinema"       title="Cinema">
+            <img src="icons/cane.png"        alt="Cani"         title="Cani">
+            <img src="icons/musica.png"      alt="Musica"       title="Musica">
+            <img src="icons/cucina.png"      alt="Cucina"       title="Cucina">
+            <img src="icons/montagna.png"    alt="Montagna"     title="Montagna">
+          </div>
+        </section>
+
+        <!-- Software & Linguaggi: tool di lavoro e basi solide -->
+        <section class="software">
+          <h2 data-it="Software & Linguaggi" data-en="Software & Languages">Software & Linguaggi</h2>
+          <div class="icon-grid">
+            <img src="icons/figma.png"      alt="Figma"                 title="Figma">
+            <img src="icons/photoshop.png"  alt="Photoshop"             title="Photoshop">
+            <img src="icons/procreate.png"  alt="Procreate"             title="Procreate">
+            <img src="icons/html.png"       alt="HTML"                  title="HTML">
+            <img src="icons/css.png"        alt="CSS"                   title="CSS">
+            <img src="icons/JS.png"         alt="JavaScript & jQuery"   title="Javascript & Jquery">
+          </div>
+        </section>
+
+        <!-- Lingue: due bandiere, due click -->
+        <section class="languages">
+          <h2>Lingue</h2>
+          <ul class="icon-row languages-row">
+            <li><img src="icons/italiano.png" alt="Italiano" class="iconb lang-switch" data-lang="it"></li>
+            <li><img src="icons/inglese.png"  alt="English"  class="iconb lang-switch" data-lang="en"></li>
+          </ul>
+        </section>
+
+      </div>
+    </aside>
+
+    <!-- Colonna destra: competenze, esperienze, contatti -->
+    <main class="content">
+      <!-- Competenze -->
+      <section class="abilities">
+        <h2 data-it="Competenze" data-en="Skills">Competenze</h2>
+
+        <div class="icon-row">
+          <div class="icon-item">
+            <img src="icons/char_design.png" alt="Character Design" class="icon">
+            <p data-it="Character Design" data-en="Character Design">Character Design</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/Illustration.png" alt="Illustrazione" class="icon">
+            <p data-it="Illustrazione" data-en="Illustration">Illustrazione</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/Logo.png" alt="Logo & Branding" class="icon">
+            <p data-it="Logo & Branding" data-en="Logo & Branding">Logo & Branding</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/Digital_ill.png" alt="Grafica Digitale" class="icon">
+            <p data-it="Grafica Digitale" data-en="Digital Graphics">Grafica Digitale</p>
+          </div>
+        </div>
+
+        <div class="icon-row">
+          <div class="icon-item">
+            <img src="icons/print.png" alt="Grafica per la stampa" class="icon">
+            <p data-it="Grafica per la stampa" data-en="Print Design">Grafica per la stampa</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/UI.png" alt="UI Design" class="icon">
+            <p data-it="UI Design" data-en="UI Design">UI Design</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/coding.png" alt="Sviluppo Software" class="icon">
+            <p data-it="Sviluppo Software" data-en="Software Development">Sviluppo Software</p>
+          </div>
+          <div class="icon-item">
+            <img src="icons/social.png" alt="Gestione Social Media" class="icon">
+            <p data-it="Gestione Social" data-en="Social Media Management">Gestione Social</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Esperienze -->
+      <section class="experience">
+        <h2 data-it="Esperienze" data-en="Experience">Esperienze</h2>
+
+        <h3 data-it="Educazione" data-en="Education">Educazione</h3>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span>
+            <span data-it="Scuola Internazionale di Comics" data-en="International School of Comics">Scuola Internazionale di Comics</span>
+          </div>
+          <div class="job-desc">
+            <span class="job-short"
+                  data-it="Specializzazione professionale in Illustrazione"
+                  data-en="Specialized in Illustration">Specializzazione professionale in Illustrazione</span>
+            <span class="job-full"
+                  data-it=" Formazione completa di 600 ore su progettazione visiva e tecniche pittoriche tradizionali e digitali. Sviluppo di uno stile personale e realizzazione di progetti editoriali professionali."
+                  data-en=" Completed a comprehensive 600-hour training program in visual design, as well as traditional and digital painting techniques. Developed a personal artistic style and produced professional editorial projects."> Formazione completa di 600 ore su progettazione visiva e tecniche pittoriche tradizionali e digitali. Sviluppo di uno stile personale e realizzazione di progetti editoriali professionali.</span>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span>
+            <span data-it="ITIS Giuseppe Peano" data-en="ITIS Giuseppe Peano">ITIS Giuseppe Peano</span>
+          </div>
+          <div class="job-desc">
+            <span class="job-short"
+                  data-it="Diploma Per. ind.le capotecnico - Informatica"
+                  data-en="Industrial Expert Diploma – Computer Science">Diploma Per. ind.le capotecnico - Informatica</span>
+            <span class="job-full"
+                  data-it=" Formazione quinquennale tecnica in programmazione, reti, sistemi e basi di dati."
+                  data-en=" Five-year technical program with a focus on programming, networking, operating systems, and databases."> Formazione quinquennale tecnica in programmazione, reti, sistemi e basi di dati.</span>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span>
+            <span data-it="Assocam Scuola Camerana" data-en="Assocam School Center">Assocam Scuola Camerana</span>
+          </div>
+          <div class="job-desc">
+            <span class="job-short"
+                  data-it="Tecnico sviluppo software"
+                  data-en="Software Development Technician">Tecnico sviluppo software</span>
+            <span class="job-full"
+                  data-it=" Corso pratico di 300 ore focalizzato sullo sviluppo di applicazioni, con l'utilizzo di linguaggi come Python, JavaScript, HTML e SQL. Studio di ambienti di sviluppo (IDE), gestione del versionamento con Git, basi di analisi e personalizzazione software secondo specifiche funzionali."
+                  data-en=" 300-hour hands-on course in application development using Python, JavaScript, HTML, and SQL. Covered IDE workflows, Git version control, fundamental analysis techniques, and software customization based on functional specifications."> Corso pratico di 300 ore focalizzato sullo sviluppo di applicazioni, con l'utilizzo di linguaggi come Python, JavaScript, HTML e SQL. Studio di ambienti di sviluppo (IDE), gestione del versionamento con Git, basi di analisi e personalizzazione software secondo specifiche funzionali.</span>
+          </div>
+        </div>
+
+        <h3 data-it="Lavoro" data-en="Work">Lavoro</h3>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span>
+            <span data-it="Inker's Club" data-en="Inker's Club">Inker's Club</span>
+          </div>
+          <div class="job-desc">
+            <span class="job-short"
+                  data-it="Tatuatore con esperienza in branding personale"
+                  data-en="Tattoo artist with personal branding experience">Tatuatore con esperienza in branding personale</span>
+            <span class="job-full"
+                  data-it=" Specializzato in comunicazione digitale e gestione clienti, con progetti di personal branding e strategie visive."
+                  data-en=" Specialized in digital communication and client management, with experience developing personal branding projects and visual strategies."> Specializzato in comunicazione digitale e gestione clienti, con progetti di personal branding e strategie visive.</span>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-title">
+            <span class="toggle-icon">+</span>
+            <span data-it="Temperino Marketing & Multimedia" data-en="Temperino Marketing & Multimedia">Temperino Marketing & Multimedia</span>
+          </div>
+          <div class="job-desc">
+            <span class="job-short"
+                  data-it="Designer di contenuti digitali e illustrazione"
+                  data-en="Digital content designer and illustrator">Designer di contenuti digitali e illustrazione</span>
+            <span class="job-full"
+                  data-it=" Grafica per web e stampa, creazione di campagne pubblicitarie e sviluppo di concept creativi per brand nazionali."
+                  data-en=" Created graphic designs for web and print, developed advertising campaigns, and conceived creative concepts for national brands.."> Grafica per web e stampa, creazione di campagne pubblicitarie e sviluppo di concept creativi per brand nazionali.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contatti -->
+      <section class="contact contact-final">
+        <h2 data-it="Contatti" data-en="Contacts">Contatti</h2>
+        <ul>
+          <li>
+            <a href="tel:+393476773106">
+              <i class="fa-solid fa-phone"></i> <span>347 677 3106</span>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:andrea@slhtattooer.it">
+              <i class="fa-solid fa-envelope"></i> <span>andrea@slhtattooer.it</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/slhtattooer/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-instagram"></i> <span>@slhtattooer</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/andrea-buda-4a7937315/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-linkedin"></i> <span data-it="Andrea Buda su LinkedIn" data-en="Andrea Buda on LinkedIn">Andrea Buda su LinkedIn</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.google.com/maps/search/?api=1&query=Caselle+Torinese+(TO)" target="_blank" rel="noopener">
+              <i class="fa-solid fa-location-dot"></i> <span data-it="Caselle Torinese (TO)" data-en="Caselle Torinese (Turin)">Caselle Torinese (TO)</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Toggle descrizioni (apri/chiudi con un click, leggero e senza dipendenze)
+      document.querySelectorAll(".job-title").forEach(title => {
+        title.addEventListener("click", () => {
+          const jobFull = title.nextElementSibling.querySelector(".job-full");
+          const icon = title.querySelector(".toggle-icon");
+          if (jobFull.style.display === "block") {
+            jobFull.style.display = "none";
+            icon.textContent = "+";
+          } else {
+            jobFull.style.display = "block";
+            icon.textContent = "−";
+          }
+        });
+      });
+
+      // Cambio lingua tramite bandiere (it/en). Semplice, efficace.
+      const applyLanguage = (lang) => {
+        document.querySelectorAll("[data-it]").forEach(el => {
+          const text = el.getAttribute(lang === "it" ? "data-it" : "data-en");
+          if (text !== null) el.innerHTML = text;
+        });
+      };
+      applyLanguage("it");
+
+      document.querySelectorAll(".lang-switch").forEach(flag => {
+        flag.addEventListener("click", () => {
+          const lang = flag.getAttribute("data-lang");
+          applyLanguage(lang);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
